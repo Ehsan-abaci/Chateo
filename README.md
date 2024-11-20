@@ -1,16 +1,26 @@
-# ehsan_chat
+# Chateo
 
-A new Flutter project.
+**Chateo** is a powerful, cross-platform chat application built using Flutter. It offers a smooth and engaging user experience across Android, iOS, Windows, and the Web. The app features a variety of modern functionalities such as real-time messaging, media sharing, and audio playback, making it ideal for personal or team communication.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+- **Real-Time Chat**: Instant messaging with WebSocket integration for fast and reliable communication.
+- **Media Sharing**: Select and send photos, videos, music, and documents seamlessly.
+- **Audio Playback**: Play audio messages with intuitive controls.
+- **Cross-Platform Compatibility**: Built with Flutter for consistent performance across mobile, desktop, and web platforms.
+- **Save Scroll State**: Continue conversations exactly where you left off, even after restarting the app.
+- **Currency Support**: Includes Toman as the primary currency for specific use cases.
+- **Custom Versioning**: Independent versioning system for Android, iOS, and Web, enabling platform-specific updates without affecting others.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠️ Technologies Used
+
+- **Frontend**: Flutter (Dart)
+- **Backend**: Dart WebSocket Server
+- **State Management**: BLoC (Business Logic Component)
+- **Media Handling**: Specialized packages for file selection and playback
+
+
