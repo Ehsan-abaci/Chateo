@@ -1,7 +1,7 @@
 part of 'search_user_cubit.dart';
 
 class SearchUserState extends Equatable {
-  List<Users> users;
+  List<Conversation> users;
 
   SearchUserState({required this.users});
 
@@ -9,7 +9,7 @@ class SearchUserState extends Equatable {
   List<Object> get props => [users];
 
   SearchUserState copyWith({
-    List<Users>? users,
+    List<Conversation>? users,
   }) {
     return SearchUserState(
       users: users ?? this.users,

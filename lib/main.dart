@@ -1,25 +1,20 @@
-import 'package:ehsan_chat/src/config/cubit/theme_cubit.dart';
-import 'package:ehsan_chat/src/config/theme_config.dart';
-import 'package:ehsan_chat/src/core/utils/constants.dart';
 import 'package:ehsan_chat/src/core/utils/locator.dart';
 import 'package:ehsan_chat/src/core/utils/resources/route.dart';
-import 'package:ehsan_chat/src/view/chats/cubits/saved_chats/saved_chats_cubit.dart';
-import 'package:ehsan_chat/src/view/navbar/cubit/navbar_controller_cubit.dart';
+import 'package:ehsan_chat/src/providers/audio_provider.dart';
+import 'package:ehsan_chat/src/providers/chat_provider.dart';
+import 'package:ehsan_chat/src/providers/video_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:media_kit/media_kit.dart';
+import 'package:provider/provider.dart';
+import 'src/config/theme_config.dart';
+import 'src/core/cubit/theme/theme_cubit.dart';
 import 'src/view/chats/cubits/search_user/search_user_cubit.dart';
-
-/// Supabase client
-final supabase = Supabase.instance.client;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Supabase.initialize(
-    url: Constants.supabaseUrl,
-    anonKey: Constants.supabaseAnonKey,
-  );
+  MediaKit.ensureInitialized();
+
   await initAppModule();
 
   runApp(
@@ -30,6 +25,8 @@ void main() async {
   );
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -38,20 +35,15 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => NavbarControllerCubit(),
-        ),
-        BlocProvider(
-          create: (context) => SearchUserCubit(),
-        ),
-        BlocProvider(
-          create: (context) => SavedChatsCubit()..getChats(),
+          create: (context) => SearchUserCubit(di()),
         ),
       ],
       child: MaterialApp(
+        // navigatorKey: navigatorKey,
         title: "Flutter Chat Application",
         debugShowCheckedModeBanner: false,
-        theme: context.watch<ThemeCubit>().state.theme,
-        // theme: ThemeConfig.darkTheme(),
+        // theme: context.watch<ThemeCubit>().state.theme,
+        theme: ThemeConfig.darkTheme(),
         onGenerateRoute: RouteGenerator.getRoute,
       ),
     );
