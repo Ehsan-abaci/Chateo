@@ -4,7 +4,6 @@ import 'package:ehsan_chat/src/core/utils/resources/config.dart';
 import 'package:ehsan_chat/src/data/remote/upload_media_data_source.dart';
 import 'package:ehsan_chat/src/model/media_file.dart';
 import 'package:ehsan_chat/src/providers/chat_provider.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 

@@ -28,7 +28,6 @@ class _ChatsScreenState extends State<ChatsScreen> {
   Widget build(BuildContext context) {
     final convs =
         context.select<ChatProvider, List<Conversation>>((cp) => cp.convs);
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(0),
       child: CustomScrollView(

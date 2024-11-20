@@ -2,13 +2,11 @@ import 'dart:developer';
 
 import 'package:ehsan_chat/src/model/message.dart';
 import 'package:ehsan_chat/src/providers/chat_provider.dart';
-import 'package:encrypt/encrypt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 

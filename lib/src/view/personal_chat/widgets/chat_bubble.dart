@@ -9,8 +9,6 @@ import 'package:ehsan_chat/src/core/utils/resources/color_manager.dart';
 import 'package:ehsan_chat/src/model/audio_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 
