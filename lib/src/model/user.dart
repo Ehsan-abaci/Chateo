@@ -1,30 +1,47 @@
-import 'package:isar/isar.dart';
-
-part 'user.g.dart';
-
-@collection
-class Users {
-  Id intId;
-  String id;
-  String fullname;
-  String? username;
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+class User {
+  int id;
+  String username;
+  String? firstname;
+  String? lastname;
   String? avatar;
-  Users({
-    required this.intId,
+
+  User({
     required this.id,
-    required this.fullname,
-    this.username,
+    required this.username,
+    this.firstname,
+    this.lastname,
     this.avatar,
   });
 
-  factory Users.fromJson(Map<String, dynamic> map) {
-    return Users(
-      id: map['id'] as String,
-      intId: map['int_id'] as Id,
-      fullname: map['fullname'] as String,
-      username: map['username'] != null ? map['username'] as String : null,
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'firstname': firstname,
+      'lastname': lastname,
+      'avatar': avatar,
+      'username': username,
+    };
+  }
+
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: map['id'] as int,
+      firstname: map['firstname'] != null ? map['firstname'] as String : null,
+      lastname: map['lastname'] != null ? map['lastname'] as String : null,
       avatar: map['avatar'] != null ? map['avatar'] as String : null,
+      username: map['username'] as String,
     );
   }
 
+  String toJson() => json.encode(toMap());
+
+  factory User.fromJson(String source) =>
+      User.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'User(id: $id, firstname: $firstname, lastname: $lastname, avatar: $avatar, username: $username)';
+  }
 }

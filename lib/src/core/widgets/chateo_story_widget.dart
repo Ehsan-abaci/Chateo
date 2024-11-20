@@ -1,6 +1,5 @@
 import 'package:ehsan_chat/src/core/utils/resources/color_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ChateoStoryWidget extends StatelessWidget {
   ChateoStoryWidget({
@@ -71,7 +70,7 @@ class ChateoStoryWidget extends StatelessWidget {
 class CustomBorder extends BoxBorder {
   final Radius? radius;
   final Gradient gradient;
-  CustomBorder({
+  const CustomBorder({
     this.radius,
     required this.gradient,
   });

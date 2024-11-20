@@ -1,39 +1,34 @@
 import 'package:ehsan_chat/src/core/utils/dbouncer.dart';
 import 'package:ehsan_chat/src/core/utils/resources/assets_manager.dart';
-import 'package:ehsan_chat/src/core/utils/resources/color_manager.dart';
-import 'package:ehsan_chat/src/core/utils/resources/route.dart';
 import 'package:ehsan_chat/src/core/widgets/chateo_icon.dart';
 import 'package:ehsan_chat/src/core/widgets/chateo_my_story_widget.dart';
 import 'package:ehsan_chat/src/core/widgets/chateo_story_widget.dart';
-import 'package:ehsan_chat/src/model/user.dart';
-import 'package:ehsan_chat/src/view/chats/cubits/saved_chats/saved_chats_cubit.dart';
+import 'package:ehsan_chat/src/model/conversation.dart';
+import 'package:ehsan_chat/src/providers/chat_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'cubits/search_user/search_user_cubit.dart';
+import 'widgets/chat_list_user_card.dart';
 
 class ChatsScreen extends StatefulWidget {
-  ChatsScreen({super.key});
+  const ChatsScreen({super.key});
 
   @override
   State<ChatsScreen> createState() => _ChatsScreenState();
 }
 
-class _ChatsScreenState extends State<ChatsScreen>
-    with AutomaticKeepAliveClientMixin {
-  List<Users> searchedUsers = [];
-  List<Users> savedUsers = [];
-
+class _ChatsScreenState extends State<ChatsScreen> {
   final TextEditingController searchController = TextEditingController();
 
   final Dbouncer dbouncer = Dbouncer();
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    savedUsers = context.read<SavedChatsCubit>().state.savedChats;
-    final h = MediaQuery.sizeOf(context).height;
+    final convs =
+        context.select<ChatProvider, List<Conversation>>((cp) => cp.convs);
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(0),
       child: CustomScrollView(
@@ -44,11 +39,12 @@ class _ChatsScreenState extends State<ChatsScreen>
           _getSearchBar(),
           BlocBuilder<SearchUserCubit, SearchUserState>(
             builder: (context, state) {
-              searchedUsers = state.users;
+              final searchedUsers = state.users;
               if (searchedUsers.isEmpty) return const SliverToBoxAdapter();
               return SliverList.list(
                 children: [
-                  ...searchedUsers.map((user) => _getUserCard(user)),
+                  ...searchedUsers
+                      .map((user) => ChatListUserCard(conversation: user)),
                   Divider(
                     color: Colors.black.withOpacity(0.2),
                     endIndent: 20,
@@ -58,48 +54,13 @@ class _ChatsScreenState extends State<ChatsScreen>
               );
             },
           ),
-          BlocBuilder<SavedChatsCubit, SavedChatsState>(
-            builder: (context, state) {
-              savedUsers = state.savedChats;
-              return SliverList.list(
-                children: [
-                  ...savedUsers.map((user) => _getUserCard(user)),
-                ],
-              );
-            },
+          SliverList.list(
+            children: [
+              ...convs
+                  .map((conv) => ChatListUserCard(conversation: conv)),
+            ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _getUserCard(Users user) {
-    return ListTile(
-      onTap: () =>
-          Navigator.pushNamed(context, Routes.personalChat, arguments: user),
-      title: Text(
-        user.fullname,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 18,
-        ),
-      ),
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: SizedBox(
-          height: 48,
-          width: 48,
-          child: ColoredBox(
-            color: ColorManager.lightBlue,
-            child: Center(
-              child: Text(
-                user.fullname.split(" ")[0][0].toUpperCase() +
-                    user.fullname.split(" ")[1][0].toUpperCase(),
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -110,19 +71,19 @@ class _ChatsScreenState extends State<ChatsScreen>
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text("Chats"),
+          const Text("Chateo"),
           Row(
             children: [
               IconButton(
                 onPressed: () {},
-                icon: ChateoIcon(
+                icon: const ChateoIcon(
                   icon: AssetsIcon.messageAlt,
                   height: 24,
                 ),
               ),
               IconButton(
                 onPressed: () {},
-                icon: ChateoIcon(
+                icon: const ChateoIcon(
                   icon: AssetsIcon.listCheck,
                   height: 24,
                 ),
@@ -147,7 +108,7 @@ class _ChatsScreenState extends State<ChatsScreen>
           itemBuilder: (context, i) => Padding(
             padding: const EdgeInsets.only(right: 16),
             child: i == 0
-                ? ChateoMyStoryWidget()
+                ? const ChateoMyStoryWidget()
                 : ChateoStoryWidget(
                     image: "$IMAGE_PATH/user$i.png",
                     name: "Ehsan",
@@ -173,31 +134,24 @@ class _ChatsScreenState extends State<ChatsScreen>
         child: ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: TextField(
+            strutStyle: const StrutStyle(
+              height: 2,
+              forceStrutHeight: true,
+            ),
             controller: searchController,
             onChanged: (value) async {
-              if (value == "") {
-                setState(() {
-                  searchedUsers = [];
-                });
-                return;
-              }
-              dbouncer.call(() async {
+              dbouncer.call(() {
                 context.read<SearchUserCubit>().searchUsersByUsername(value);
               });
             },
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: ColorManager.offWhite,
-              border: InputBorder.none,
+            style: Theme.of(context).textTheme.titleMedium,
+            decoration: const InputDecoration(
               hintText: "Search",
-              prefixIcon: const Icon(CupertinoIcons.search),
+              prefixIcon: Icon(CupertinoIcons.search),
             ),
           ),
         ),
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

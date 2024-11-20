@@ -17,4 +17,6 @@ class AssetsImage {
   static const String user2 = "$IMAGE_PATH/user2.png";
   static const String user3 = "$IMAGE_PATH/user3.png";
   static const String user4 = "$IMAGE_PATH/user4.png";
+  static const String onboarding = "$IMAGE_PATH/onboarding.png";
+  static const String placeholder = "$IMAGE_PATH/placeholder.jpg";
 }
