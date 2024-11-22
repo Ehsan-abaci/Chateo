@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ehsan_chat/src/core/utils/locator.dart';
 import 'package:ehsan_chat/src/model/signup_request.dart';
 import 'package:ehsan_chat/src/providers/chat_provider.dart';
@@ -34,11 +36,13 @@ class RouteGenerator {
   static Route getRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case Routes.splashRoute:
-        return MaterialPageRoute(
-            builder: (_) => BlocProvider(
-                  create: (context) => SplashCubit(),
-                  child: const SplashScreen(),
-                ));
+        return MaterialPageRoute(builder: (_) {
+          // clearHomeModule();
+          return BlocProvider(
+            create: (context) => SplashCubit(),
+            child: const SplashScreen(),
+          );
+        });
       case Routes.onboardingRoute:
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
       case Routes.loginRoute:
@@ -76,22 +80,22 @@ class RouteGenerator {
           builder: (_) {
             initHomeModule();
             return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (context) => di<ChatProvider>()..connect(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => di<AudioProvider>(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => di<VideoProvider>(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => di<HomeProvider>(),
-              ),
-            ],
-            child: const HomeScreen(),
-          );
+              providers: [
+                ChangeNotifierProvider(
+                  create: (context) => di<ChatProvider>()..connect(),
+                ),
+                ChangeNotifierProvider(
+                  create: (context) => di<AudioProvider>(),
+                ),
+                ChangeNotifierProvider(
+                  create: (context) => di<VideoProvider>(),
+                ),
+                ChangeNotifierProvider(
+                  create: (context) => di<HomeProvider>(),
+                ),
+              ],
+              child: const HomeScreen(),
+            );
           },
         );
       case Routes.personalChat:
@@ -101,6 +105,12 @@ class RouteGenerator {
               providers: [
                 ChangeNotifierProvider.value(
                   value: di<ChatProvider>(),
+                ),
+                ChangeNotifierProvider.value(
+                  value: di<VideoProvider>(),
+                ),
+                ChangeNotifierProvider.value(
+                  value: di<AudioProvider>(),
                 ),
                 ChangeNotifierProxyProvider<ChatProvider, PersonalChatProvider>(
                   create: (c) => PersonalChatProvider(),

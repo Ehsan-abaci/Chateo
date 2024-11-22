@@ -1,5 +1,5 @@
 import 'package:ehsan_chat/src/model/message.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show ValueNotifier;
 
 class AudioMessage extends Message {
   ValueNotifier<double?>? downloadProgress;

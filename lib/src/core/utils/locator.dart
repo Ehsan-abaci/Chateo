@@ -31,18 +31,18 @@ Future<void> initAppModule() async {
   di.registerLazySingleton(() => SearchUserDataSource(di()));
 }
 
-initHomeModule() {
-  clearHomeModule();
+void initHomeModule()  {
+  if (di.isRegistered<ChatProvider>()) return;
   di.registerLazySingleton(() => ChatProvider());
   di.registerLazySingleton(() => HomeProvider());
   di.registerLazySingleton(() => VideoProvider());
   di.registerLazySingleton(() => AudioProvider());
 }
 
-clearHomeModule() {
-  if (!di.isRegistered<ChatProvider>()) return;
-  di.unregister<ChatProvider>();
-  di.unregister<HomeProvider>();
-  di.unregister<VideoProvider>();
-  di.unregister<AudioProvider>();
-}
+// Future<void> clearHomeModule() async {
+//   if (!di.isRegistered<ChatProvider>()) return;
+//   di.unregister<ChatProvider>();
+//   di.unregister<HomeProvider>();
+//   di.unregister<VideoProvider>();
+//   di.unregister<AudioProvider>();
+// }

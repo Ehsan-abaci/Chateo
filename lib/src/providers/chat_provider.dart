@@ -41,6 +41,8 @@ class ChatProvider extends ChangeNotifier {
         connectionState = 'Connected';
       } else if (state is Reconnecting || state is Connecting) {
         connectionState = 'Connecting...';
+      } else if (state is Disconnected) {
+        connectionState = 'Disconnected';
       }
       notifyListeners();
     }, onError: (e) {

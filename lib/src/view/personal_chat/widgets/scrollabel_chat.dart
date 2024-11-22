@@ -95,9 +95,7 @@ class _ScrollableChatState extends State<ScrollableChat> {
                 minCacheExtent: 500,
                 reverse: true,
                 itemCount: mesages.length,
-                itemBuilder: (context, i) => ChatBubble(
-                  message: mesages[i],
-                ),
+                itemBuilder: (context, i) => ChatBubble(message: mesages[i]),
               );
             },
           ),

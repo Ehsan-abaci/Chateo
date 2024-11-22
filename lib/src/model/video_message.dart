@@ -1,6 +1,8 @@
 import 'package:ehsan_chat/src/model/message.dart';
+import 'package:flutter/material.dart' show ValueNotifier;
 
 class VideoMessage extends Message {
+  ValueNotifier<double> downloadProgress = ValueNotifier(1);
   String? fileUrl;
   String? text;
 

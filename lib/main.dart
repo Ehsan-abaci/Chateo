@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        // navigatorKey: navigatorKey,
+        navigatorKey: navigatorKey,
         title: "Flutter Chat Application",
         debugShowCheckedModeBanner: false,
         // theme: context.watch<ThemeCubit>().state.theme,

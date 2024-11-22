@@ -7,11 +7,13 @@ class AudioProvider extends ChangeNotifier {
   final Player mediaPlayer = Player();
 
   Stream<Duration> get positionStream => mediaPlayer.stream.position;
+  Duration get position => mediaPlayer.state.position;
 
   Duration get duration => mediaPlayer.state.duration;
 
   Stream<bool> get isPlayingStream => mediaPlayer.stream.playing;
   bool get isPlaying => mediaPlayer.state.playing;
+
   String? currentAudioUrl;
 
   onChange(double pos) {
