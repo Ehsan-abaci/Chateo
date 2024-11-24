@@ -27,8 +27,8 @@
 ## 🛠️ Technologies Used
 
 - **Frontend**: Flutter (Dart)
-- **Backend**: Dart WebSocket Server
-- **State Management**: BLoC (Business Logic Component)
+- **Backend**: Vania Dart Backend
+- **State Management**: Provider state management
 - **Media Handling**: Specialized packages for file selection and playback
 
 
