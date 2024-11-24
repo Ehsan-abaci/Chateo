@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show immutable;
 
 typedef CloseErrorScreen = bool Function();
-typedef UpdateErrorScreen = bool Function(List<String> text);
+typedef UpdateErrorScreen = bool Function(String text);
 
 @immutable
 class ErrorScreenController {

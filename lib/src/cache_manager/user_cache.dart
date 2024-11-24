@@ -7,8 +7,6 @@ import '../model/me.dart';
 class UserCacheManager {
   UserCacheManager._();
 
-  static bool isUserLoggedIn = false;
-
   static const String USER_ID_KEY = '--user-id-key';
   static const String USER_NAME_KEY = '--user-name-key';
   static const String USER_EMAIL_KEY = '--user-email-key';
@@ -48,11 +46,11 @@ class UserCacheManager {
     await box.clear();
   }
 
-  static Future<void> checkLogin() async {
+  static Future<bool> checkLogin() async {
     final box = Hive.box('me');
     try {
       final userId = await box.get(USER_ID_KEY);
-      UserCacheManager.isUserLoggedIn = userId != null;
+      return userId != null;
     } catch (e) {
       throw Exception('User logged out');
     }

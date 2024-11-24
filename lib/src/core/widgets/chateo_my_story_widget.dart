@@ -33,11 +33,12 @@ class ChateoMyStoryWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: ColoredBox(
-          color: ColorManager.offWhite,
-          child: const Padding(
-            padding: EdgeInsets.all(12.0),
+          color: ColorManager.neutralDark,
+          child:  Padding(
+            padding: const EdgeInsets.all(12.0),
             child: ChateoIcon(
               icon: AssetsIcon.plus,
+              color: ColorManager.offWhite,
               height: 30,
               isDisabled: true,
             ),

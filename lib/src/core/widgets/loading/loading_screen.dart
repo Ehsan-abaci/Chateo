@@ -1,3 +1,4 @@
+import 'package:ehsan_chat/main.dart';
 import 'package:flutter/material.dart';
 
 import 'loading_screen_controller.dart';
@@ -9,9 +10,7 @@ class LoadingScreen {
 
   LoadingScreenController? controller;
 
-  void show({
-    required BuildContext context,
-  }) {
+  void show(BuildContext context) {
     if (controller?.update() ?? false) {
       return;
     } else {
@@ -59,7 +58,7 @@ class LoadingScreen {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                       Expanded(
+                      Expanded(
                         flex: 2,
                         child: Text(
                           "Your request was sent. Please wait",

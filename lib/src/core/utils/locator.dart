@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:ehsan_chat/src/core/resources/api_client.dart';
-import 'package:ehsan_chat/src/data/remote/search_user_data_source.dart';
+import 'package:ehsan_chat/src/data/services/remote/search_user_service.dart';
 import 'package:ehsan_chat/src/providers/audio_provider.dart';
 import 'package:ehsan_chat/src/providers/chat_provider.dart';
 import 'package:ehsan_chat/src/providers/home_provider.dart';
 import 'package:ehsan_chat/src/providers/video_provider.dart';
+import 'package:ehsan_chat/src/ui/splash/view_models/splash_viewmodel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -28,21 +29,6 @@ Future<void> initAppModule() async {
   await Hive.openBox('setting');
 
   /// remote data sources
-  di.registerLazySingleton(() => SearchUserDataSource(di()));
-}
+  di.registerLazySingleton(() => SearchUserService(di()));
 
-void initHomeModule()  {
-  if (di.isRegistered<ChatProvider>()) return;
-  di.registerLazySingleton(() => ChatProvider());
-  di.registerLazySingleton(() => HomeProvider());
-  di.registerLazySingleton(() => VideoProvider());
-  di.registerLazySingleton(() => AudioProvider());
 }
-
-// Future<void> clearHomeModule() async {
-//   if (!di.isRegistered<ChatProvider>()) return;
-//   di.unregister<ChatProvider>();
-//   di.unregister<HomeProvider>();
-//   di.unregister<VideoProvider>();
-//   di.unregister<AudioProvider>();
-// }

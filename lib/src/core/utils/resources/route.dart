@@ -1,26 +1,23 @@
-import 'dart:developer';
-
-import 'package:ehsan_chat/src/core/utils/locator.dart';
 import 'package:ehsan_chat/src/model/signup_request.dart';
 import 'package:ehsan_chat/src/providers/chat_provider.dart';
 import 'package:ehsan_chat/src/providers/home_provider.dart';
-import 'package:ehsan_chat/src/providers/personal_chat_cubit.dart';
-import 'package:ehsan_chat/src/view/Home/home_screen.dart';
-import 'package:ehsan_chat/src/view/login/bloc/login_bloc.dart';
-import 'package:ehsan_chat/src/view/login/login_screen.dart';
-import 'package:ehsan_chat/src/view/onboarding/onboarding_screen.dart';
-import 'package:ehsan_chat/src/view/register/blocs/opt/otp_bloc.dart';
-import 'package:ehsan_chat/src/view/register/otp_screen.dart';
-import 'package:ehsan_chat/src/view/register/register_screen.dart';
-import 'package:ehsan_chat/src/view/splash/cubit/splash_cubit.dart';
-import 'package:ehsan_chat/src/view/splash/splash_screen.dart';
+import 'package:ehsan_chat/src/providers/personal_chat_provider.dart';
+import 'package:ehsan_chat/src/ui/Home/home_screen.dart';
+import 'package:ehsan_chat/src/ui/login/login_screen.dart';
+import 'package:ehsan_chat/src/ui/login/view_models/login_viewmodel.dart';
+import 'package:ehsan_chat/src/ui/onboarding/onboarding_screen.dart';
+import 'package:ehsan_chat/src/ui/register/otp_screen.dart';
+import 'package:ehsan_chat/src/ui/register/register_screen.dart';
+import 'package:ehsan_chat/src/ui/register/view_models/otp_viewmodel.dart';
+import 'package:ehsan_chat/src/ui/register/view_models/register_viewmodel.dart';
+import 'package:ehsan_chat/src/ui/splash/splash_screen.dart';
+import 'package:ehsan_chat/src/ui/splash/view_models/splash_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import '../../../providers/audio_provider.dart';
 import '../../../providers/video_provider.dart';
-import '../../../view/personal_chat/personal_chat_screen.dart';
-import '../../../view/register/blocs/register/register_bloc.dart';
+import '../../../ui/personal_chat/personal_chat_screen.dart';
 
 class Routes {
   static const String splashRoute = '/';
@@ -32,95 +29,52 @@ class Routes {
   static const String personalChat = '/personal-chat';
 }
 
+List<SingleChildWidget> providers = [
+  // ChangeNotifierProvider(create: (context) => SplashViewModel()),
+  ChangeNotifierProvider(create: (context) => LoginViewModel()),
+  ChangeNotifierProvider(create: (context) => RegisterViewModel()),
+  ChangeNotifierProvider(create: (context) => OtpViewModel()),
+  ChangeNotifierProvider(create: (context) => VideoProvider()),
+  ChangeNotifierProvider(create: (context) => AudioProvider()),
+  ChangeNotifierProvider(create: (context) => ChatProvider()),
+  ChangeNotifierProvider(create: (context) => HomeProvider()),
+  ChangeNotifierProxyProvider<ChatProvider, PersonalChatProvider>(
+    create: (context) => PersonalChatProvider(),
+    update: (context, chatProvider, previous) =>
+        previous!..initChatProvider(chatProvider),
+  ),
+];
+
 class RouteGenerator {
   static Route getRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case Routes.splashRoute:
-        return MaterialPageRoute(builder: (_) {
-          // clearHomeModule();
-          return BlocProvider(
-            create: (context) => SplashCubit(),
-            child: const SplashScreen(),
-          );
-        });
+        return MaterialPageRoute(
+          builder: (_) => const SplashScreen(),
+        );
       case Routes.onboardingRoute:
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
       case Routes.loginRoute:
         return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => LoginBloc(),
-            child: LoginScreen(),
-          ),
+          builder: (context) => LoginScreen(),
         );
       case Routes.registerRoute:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => RegisterBloc(),
-            child: RegisterScreen(),
-          ),
+          builder: (_) => RegisterScreen(),
         );
       case Routes.otpRoute:
         return MaterialPageRoute(
-          builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => OtpBloc(),
-              ),
-              BlocProvider(
-                create: (context) => RegisterBloc(),
-              ),
-            ],
-            child: OtpScreen(
-              signupRequest: routeSettings.arguments as SignupRequest,
-            ),
+          builder: (_) => OtpScreen(
+            signupRequest: routeSettings.arguments as SignupRequest,
           ),
         );
       case Routes.homeRoute:
         return MaterialPageRoute(
-          builder: (_) {
-            initHomeModule();
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider(
-                  create: (context) => di<ChatProvider>()..connect(),
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => di<AudioProvider>(),
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => di<VideoProvider>(),
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => di<HomeProvider>(),
-                ),
-              ],
-              child: const HomeScreen(),
-            );
-          },
+          builder: (context) => const HomeScreen(),
         );
       case Routes.personalChat:
         return MaterialPageRoute(
-          builder: (_) {
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider.value(
-                  value: di<ChatProvider>(),
-                ),
-                ChangeNotifierProvider.value(
-                  value: di<VideoProvider>(),
-                ),
-                ChangeNotifierProvider.value(
-                  value: di<AudioProvider>(),
-                ),
-                ChangeNotifierProxyProvider<ChatProvider, PersonalChatProvider>(
-                  create: (c) => PersonalChatProvider(),
-                  update: (context, chatProvider, previous) =>
-                      previous!..initChatProvider(chatProvider),
-                ),
-              ],
-              child: PersonalChat(),
-            );
-          },
+          builder: (context) => PersonalChat(),
         );
       default:
         return MaterialPageRoute(

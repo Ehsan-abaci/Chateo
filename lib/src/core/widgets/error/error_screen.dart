@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:ehsan_chat/main.dart';
 import 'package:ehsan_chat/src/core/widgets/chateo_rounded_button.dart';
 import 'package:ehsan_chat/src/core/widgets/error/error_screen_controller.dart';
 import 'package:flutter/material.dart';
+
 class ErrorScreen {
   ErrorScreen._internal();
   static final ErrorScreen _inst = ErrorScreen._internal();
@@ -12,7 +14,7 @@ class ErrorScreen {
   void show({
     required BuildContext context,
     required String title,
-    required List<String> texts,
+    required String texts,
   }) {
     if (controller?.update(texts) ?? false) {
       return;
@@ -33,9 +35,9 @@ class ErrorScreen {
   ErrorScreenController showOverlay({
     required BuildContext context,
     required String title,
-    required List<String> texts,
+    required String texts,
   }) {
-    final text = StreamController<List<String>>();
+    final text = StreamController<String>();
     text.add(texts);
 
     final state = Overlay.of(context);
@@ -60,7 +62,7 @@ class ErrorScreen {
                   vertical: size.height * .01,
                   horizontal: size.width * .05,
                 ),
-                child: StreamBuilder<List<String>>(
+                child: StreamBuilder<String>(
                     stream: text.stream,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
@@ -77,14 +79,12 @@ class ErrorScreen {
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             const SizedBox(height: 10),
-                            ...text.map(
-                              (e) => Text(
-                                "● $e",
-                                style: const TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12),
-                              ),
+                            Text(
+                              text,
+                              style: const TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12),
                             ),
                             const SizedBox(height: 20),
                             SizedBox(

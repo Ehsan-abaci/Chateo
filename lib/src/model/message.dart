@@ -43,12 +43,6 @@ class Message implements AppCollection {
         return AudioMessage(message);
       case 'video':
         return VideoMessage(message);
-      // case 'sticker':
-      //   return ChatStickerModel(message);
-      // case 'voice':
-      //   return ChatVoiceModel(message);
-      // case 'doc':
-      //   return ChatDocModel(message);
       default:
         return TextMessage(message);
     }

@@ -1,13 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
-
-import 'package:ehsan_chat/src/services/download_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-
-import '../core/utils/constants.dart';
+import '../data/services/remote/download_service.dart';
 
 class VideoProvider extends ChangeNotifier {
   final List<Player> _players = [];

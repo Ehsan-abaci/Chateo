@@ -29,7 +29,9 @@ class AudioProvider extends ChangeNotifier {
   Future<void> playAudio(String url) async {
     try {
       stopAudio();
-      await mediaPlayer.open(Media('${Constants.serverUrl}$url'));
+      final media =
+          Media('${Constants.serverUrl}$url', extras: {'singer': 'Shadmehr'});
+      await mediaPlayer.open(media);
       currentAudioUrl = url;
       notifyListeners();
     } catch (e) {

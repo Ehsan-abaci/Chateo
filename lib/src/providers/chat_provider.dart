@@ -1,22 +1,36 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ehsan_chat/src/core/utils/extensions.dart';
+import 'package:ehsan_chat/src/data/services/remote/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
 import '../cache_manager/hive_cache.dart';
-import '../data/remote/auth_date_source.dart';
 import '../model/conversation.dart';
 
+enum SocketConnectionState {
+  connected('Chateo'),
+  disconnected('Disconnected'),
+  connecting('Connecting...'),
+  error('Error');
+
+  final String state;
+
+  const SocketConnectionState(this.state);
+}
+
 class ChatProvider extends ChangeNotifier {
-  String connectionState = 'Disconnected';
+  SocketConnectionState connectionState = SocketConnectionState.disconnected;
   List<Conversation> convs = [];
   Conversation? selectedConv;
 
   WebSocket? _socket;
+
+  late StreamSubscription<ConnectionState>? _connectionSubscription;
 
   WebSocket? get socket => _socket;
 
@@ -26,7 +40,7 @@ class ChatProvider extends ChangeNotifier {
     return WebSocket(
       uri,
       backoff: backoff,
-      headers: {"authorization": AuthDataSource.inst.accessToken},
+      headers: {"authorization": AuthService.inst.accessToken},
     );
   }
 
@@ -34,21 +48,22 @@ class ChatProvider extends ChangeNotifier {
     final loadedConvs = await HiveCacheManager.inst.getConversations();
     convs = loadedConvs;
 
-    _socket = _socket ?? createSocketConnection();
+      _socket = _socket ?? createSocketConnection();
 
-    _socket?.connection.listen((state) {
-      if (state is Connected || state is Reconnected) {
-        connectionState = 'Connected';
-      } else if (state is Reconnecting || state is Connecting) {
-        connectionState = 'Connecting...';
-      } else if (state is Disconnected) {
-        connectionState = 'Disconnected';
-      }
-      notifyListeners();
-    }, onError: (e) {
-      connectionState = 'Error';
-      notifyListeners();
-    });
+      _connectionSubscription = _socket?.connection.listen((state) {
+        if (state is Connected || state is Reconnected) {
+          connectionState = SocketConnectionState.connected;
+        } else if (state is Reconnecting || state is Connecting) {
+          connectionState = SocketConnectionState.connecting;
+        } else if (state is Disconnected) {
+          connectionState = SocketConnectionState.disconnected;
+        }
+        notifyListeners();
+      }, onError: (e) {
+        connectionState = SocketConnectionState.error;
+        notifyListeners();
+      });
+    
 
     _socket?.messages.listen(
       (data) {
@@ -76,7 +91,6 @@ class ChatProvider extends ChangeNotifier {
       if (existedConvIndex == -1) {
         convs = [...convs, newConv];
         existedConvIndex = convs.indexOf(newConv);
-        notifyListeners();
       }
       for (final msg in newConv.msgList) {
         // Check if there is any message with the same id in the list
@@ -93,6 +107,8 @@ class ChatProvider extends ChangeNotifier {
 
       HiveCacheManager.inst.saveConversation(convs[existedConvIndex]);
     }
+
+    notifyListeners();
 
     if (selectedConv != null && minIndexOfChatListOnViewPort == 0) {
       if (!chatListScrollController.isAttached) return;
@@ -199,6 +215,7 @@ class ChatProvider extends ChangeNotifier {
 
   void disconnect() {
     _socket?.close();
+    _connectionSubscription?.cancel();
     _socket = null;
   }
 
