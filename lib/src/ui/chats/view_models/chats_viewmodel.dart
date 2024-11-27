@@ -1,10 +1,11 @@
-import 'package:ehsan_chat/src/data/services/remote/search_user_service.dart';
+import 'package:ehsan_chat/src/core/resources/result.dart';
+import 'package:ehsan_chat/src/data/services/remote/user_service.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../model/conversation.dart';
 
 class ChatsViewModel extends ChangeNotifier {
-  final SearchUserService searchUserService;
+  final UserService searchUserService;
   ChatsViewModel(this.searchUserService);
 
   List<Conversation> serchedUsers = [];
@@ -16,8 +17,10 @@ class ChatsViewModel extends ChangeNotifier {
       return;
     }
     if (!username.startsWith('@')) username = "@$username";
-    final dataState = await searchUserService.searchUsersByUsername(username);
-    serchedUsers = dataState.data ?? [];
+    final result = await searchUserService.searchUsersByUsername(username);
+    if (result is Ok) {
+      serchedUsers = result.asOk.value;
+    }
     notifyListeners();
   }
 }

@@ -1,4 +1,6 @@
 import 'package:ehsan_chat/src/core/resources/result.dart';
+import 'package:ehsan_chat/src/core/utils/locator.dart';
+import 'package:ehsan_chat/src/data/repositories/auth_repository.dart';
 import 'package:ehsan_chat/src/data/services/remote/auth_service.dart';
 import 'package:ehsan_chat/src/model/login_request.dart';
 import 'package:flutter/foundation.dart';
@@ -13,7 +15,7 @@ enum Status {
 }
 
 class LoginViewModel extends ChangeNotifier {
-  final AuthService _auth = AuthService();
+  final AuthRepository _auth = di<AuthRepository>();
 
   bool isAuthenticated = false;
   Status status = Status.initial;
@@ -25,14 +27,14 @@ class LoginViewModel extends ChangeNotifier {
 
     await Future.delayed(const Duration(seconds: 3));
 
-    final result = await _auth.loginRequest(loginRequest);
+    final result = await _auth.login(loginRequest);
 
     if (result is Ok) {
       status = Status.success;
       message = 'You logged in.';
     } else {
       status = Status.error;
-      message = result.asError.error;
+      message = result.asError.error.message;
     }
     notifyListeners();
   }

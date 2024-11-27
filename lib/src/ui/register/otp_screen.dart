@@ -47,7 +47,7 @@ class _OtpScreenState extends State<OtpScreen> {
       LoadingScreen.instance().show(context);
     } else if (otpViewModel.status == Status.success) {
       LoadingScreen.instance().hide();
-      Utils.showSnackBar(otpViewModel.message!);
+      Utils.showSnackBar(context,otpViewModel.message!);
       Navigator.pushNamedAndRemoveUntil(
         context,
         Routes.splashRoute,
@@ -68,7 +68,7 @@ class _OtpScreenState extends State<OtpScreen> {
       LoadingScreen.instance().show(context);
     } else if (registerViewModel.status == Status.success) {
       LoadingScreen.instance().hide();
-      Utils.showSnackBar(registerViewModel.message!);
+      Utils.showSnackBar(context,registerViewModel.message!);
       Navigator.pushNamed(
         context,
         Routes.otpRoute,

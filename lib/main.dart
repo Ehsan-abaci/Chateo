@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ehsan_chat/src/core/utils/locator.dart';
 import 'package:ehsan_chat/src/core/utils/resources/route.dart';
 import 'package:ehsan_chat/src/core/widgets/scroll_behavior.dart';
@@ -8,6 +10,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'src/config/theme_config.dart';
 
+final key = UniqueKey();
 class MyWrapper extends StatelessWidget {
   const MyWrapper({super.key});
 
@@ -15,13 +18,15 @@ class MyWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => SplashViewModel(),
-      builder: (context, _) => MultiProvider(
-        key: context.watch<SplashViewModel>().isAuthenticated == false
-            ? UniqueKey()
-            : null,
-        providers: providers,
-        child: const MyApp(),
-      ),
+      builder: (context, _) {
+        final isAuthenticated =
+            context.watch<SplashViewModel>().isAuthenticated;
+        return MultiProvider(
+          key: !isAuthenticated ? key : null,
+          providers: providers,
+          child: const MyApp(),
+        );
+      },
     );
   }
 }
@@ -32,10 +37,10 @@ void main() async {
 
   await initAppModule();
 
-  runApp(MyWrapper());
+  runApp(const MyWrapper());
 }
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+final _navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -49,7 +54,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        navigatorKey: navigatorKey,
+        key: _navigatorKey,
         title: "Flutter Chat Application",
         debugShowCheckedModeBanner: false,
         scrollBehavior: AppCustomScrollBehavior(),

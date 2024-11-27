@@ -16,8 +16,8 @@ class AppPreferences {
     await me.put(PREFS_KEY_IS_LOGGED_IN, true);
   }
 
-  String getAccessToken() {
-    return Config.me!.token.accessToken;
+  String? getAccessToken() {
+    return Config.me?.token.accessToken;
   }
 
   Future<bool> isLoggedIn() async {

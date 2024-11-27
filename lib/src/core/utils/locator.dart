@@ -1,19 +1,35 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:ehsan_chat/src/core/resources/api_client.dart';
-import 'package:ehsan_chat/src/data/services/remote/search_user_service.dart';
-import 'package:ehsan_chat/src/providers/audio_provider.dart';
-import 'package:ehsan_chat/src/providers/chat_provider.dart';
-import 'package:ehsan_chat/src/providers/home_provider.dart';
-import 'package:ehsan_chat/src/providers/video_provider.dart';
-import 'package:ehsan_chat/src/ui/splash/view_models/splash_viewmodel.dart';
+import 'package:ehsan_chat/src/data/repositories/auth_repository.dart';
+import 'package:ehsan_chat/src/data/services/remote/user_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import 'constants.dart';
+
 var di = GetIt.instance;
 
 Future<void> initAppModule() async {
-  di.registerLazySingleton(() => ApiClient.getDio());
+  Dio dio = Dio(
+    BaseOptions(
+      baseUrl: Constants.baseUrlV1,
+      validateStatus: (statusCode) {
+        if (statusCode == null) {
+          return false;
+        }
+        if (statusCode == 422) {
+          // your http status code
+          return true;
+        } else {
+          return statusCode >= 200 && statusCode < 300;
+        }
+      },
+    ),
+  );
+  di.registerLazySingleton(() => ApiClient(dio));
+
   // Hive data base
   Hive.init('./');
   if (!kIsWeb) {
@@ -29,6 +45,8 @@ Future<void> initAppModule() async {
   await Hive.openBox('setting');
 
   /// remote data sources
-  di.registerLazySingleton(() => SearchUserService(di()));
+  di.registerLazySingleton(() => UserService());
 
+  // Repositories
+  di.registerLazySingleton(() => AuthRepository());
 }

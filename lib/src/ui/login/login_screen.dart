@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
       LoadingScreen.instance().show(context);
     } else if (loginViewModel.status == Status.success) {
       LoadingScreen.instance().hide();
-      Utils.showSnackBar(loginViewModel.message!);
+      Utils.showSnackBar(context, loginViewModel.message!);
       Navigator.pushNamedAndRemoveUntil(
         context,
         Routes.splashRoute,

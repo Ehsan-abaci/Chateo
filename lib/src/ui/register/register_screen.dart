@@ -67,7 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       LoadingScreen.instance().show(context);
     } else if (registerViewModel.status == Status.success) {
       LoadingScreen.instance().hide();
-      Utils.showSnackBar(registerViewModel.message!);
+      Utils.showSnackBar(context,registerViewModel.message!);
       Navigator.pushNamed(
         context,
         Routes.otpRoute,

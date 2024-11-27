@@ -1,9 +1,8 @@
-import 'package:ehsan_chat/main.dart';
 import 'package:flutter/material.dart';
 
 class Utils {
-  static void showSnackBar(String message) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+  static void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.green.shade800,

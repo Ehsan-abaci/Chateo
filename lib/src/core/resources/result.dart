@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:ehsan_chat/src/core/resources/error_handler.dart';
+
 /// Utility class to wrap result data
 ///
 /// Evaluate the result using a switch statement:
@@ -19,10 +21,10 @@ sealed class Result<T> {
   const Result();
 
   /// Creates an instance of Result containing a value
-  factory Result.ok(T value) => Ok(value);
+  const factory Result.ok(T value) = Ok<T>;
 
   /// Create an instance of Result containing an error
-  factory Result.error(String error) => Error(error);
+  const factory Result.error(AppException error) = Error<T>;
 
   /// Convenience method to cast to Ok
   Ok<T> get asOk => this as Ok<T>;
@@ -47,7 +49,7 @@ final class Error<T> extends Result<T> {
   const Error(this.error);
 
   /// Returned error in result
-  final String error;
+  final AppException error;
 
   @override
   String toString() => 'Result<$T>.error($error)';

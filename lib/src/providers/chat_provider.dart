@@ -30,7 +30,7 @@ class ChatProvider extends ChangeNotifier {
 
   WebSocket? _socket;
 
-  late StreamSubscription<ConnectionState>? _connectionSubscription;
+  StreamSubscription<ConnectionState>? _connectionSubscription;
 
   WebSocket? get socket => _socket;
 
@@ -50,7 +50,7 @@ class ChatProvider extends ChangeNotifier {
 
       _socket = _socket ?? createSocketConnection();
 
-      _connectionSubscription = _socket?.connection.listen((state) {
+      _connectionSubscription = _connectionSubscription ?? _socket?.connection.listen((state) {
         if (state is Connected || state is Reconnected) {
           connectionState = SocketConnectionState.connected;
         } else if (state is Reconnecting || state is Connecting) {
@@ -216,6 +216,7 @@ class ChatProvider extends ChangeNotifier {
   void disconnect() {
     _socket?.close();
     _connectionSubscription?.cancel();
+    _connectionSubscription = null;
     _socket = null;
   }
 
